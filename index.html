@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Toolkit Hub - Ethical Hacking Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #0a0e14;
+            --darker-bg: #050709;
+            --neon-green: #00ff41;
+            --card-bg: rgba(15, 23, 35, 0.85);
+            --border-glow: rgba(0, 255, 65, 0.3);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.28;
+            pointer-events: none;
+        }
+
+        header {
+            background-color: #1a1a1a;
+            padding: 1rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ff88;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+        /* Navigation */
+        .navbar {
+            background-color: rgba(10, 10, 10, 0.95);
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+            padding: 15px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            text-shadow: var(--glow);
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            margin: 0 10px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color);
+            text-shadow: var(--glow);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        .logo i {
+            transform: rotate(-45deg);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #00ff88;
+            transition: width 0.3s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: #00ff88;
+        }
+
+        nav a:hover::after,
+        nav a.active::after {
+            width: 100%;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 5rem 2rem;
+            background-color: rgba(18,18,18,0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .hero-text {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .hero-art {
+            flex-shrink: 0;
+            width: 280px;
+        }
+
+        .hero-art svg {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 20px rgba(0,255,65,0.35));
+        }
+
+        @media (max-width: 800px) {
+            .hero-inner {
+                flex-direction: column-reverse;
+            }
+            .hero-art {
+                width: 200px;
+            }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #00ff88, #00ccff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px #00ff88); }
+            to { filter: drop-shadow(0 0 15px #00ff88); }
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+
+        .terminal-text {
+            background-color: #000;
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin-top: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+
+        .section {
+            padding: 4rem 5%;
+            background-color: rgba(18,18,18,0.18);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #00ff88;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            opacity: 0.8;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .tool-card {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #333;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.1);
+        }
+
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #00ff88;
+        }
+
+        .tool-name {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .tool-description {
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .explore-btn {
+            background-color: #00ff88;
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .explore-btn:hover {
+            background-color: #00cc7a;
+            transform: scale(1.05);
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+        }
+
+        .resource-modal {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid #333;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            color: #00ff88;
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #00ff88;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+        .contact-section {
+            padding: 4rem 2rem;
+            background-color: rgba(5,7,9,0.2);
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--neon-green);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: rgba(15, 23, 35, 0.8);
+            border: 1px solid var(--border-glow);
+            border-radius: 6px;
+            color: #ffffff;
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, var(--neon-green), #ffffff);
+            color: #000000;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 65, 0.4);
+        }
+        .footer {
+            background-color: var(--darker-bg);
+            padding: 2rem;
+            border-top: 1px solid var(--border-glow);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            color: #ffffff;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-link:hover {
+            color: var(--neon-green);
+        }
+
+        .copyright {
+            color: #888888;
+            font-size: 0.9rem;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .modal-title {
+            color: var(--neon-green);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .modal-body {
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background-color: #000;
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .resource-link {
+            display: inline-block;
+            background-color: #00ff88;
+            color: #000;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0.5rem 0.25rem;
+            transition: background-color 0.3s;
+        }
+
+        .resource-link:hover {
+            background-color: #00cc7a;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix-canvas" aria-hidden="true"></canvas>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-terminal"></i>
+            Security Toolkit Hub
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#networking">Networking</a></li>
+                <li><a href="#web-security">Web Security</a></li>
+                <li><a href="#password-cracking">Password Cracking</a></li>
+                <li><a href="#wireless-mobile">Wireless & Mobile</a></li>
+                <li><a href="#forensic">Forensic</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <section id="home" class="hero">
+        <div class="hero-inner">
+            <div class="hero-text">
+                <h1>Ethical Hacking Tools Hub</h1>
+                <p>Your comprehensive resource for ethical hacking tools, organized by category with detailed learning resources.</p>
+
+                <div class="terminal-text">
+                    <p># Welcome to Security Toolkit Hub</p>
+                    <p># Where security meets innovation</p>
+                    <p># Explore • Learn • Secure!</p>
+                    <p>$ sudo apt-get install security-toolkit-hub</p>
+                </div>
+            </div>
+
+            <div class="hero-art" aria-hidden="true">
+                <svg viewBox="0 0 260 300" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="glow" cx="50%" cy="40%" r="60%">
+                            <stop offset="0%" stop-color="#00ff88" stop-opacity="0.35"/>
+                            <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+                        </radialGradient>
+                        <linearGradient id="hoodie" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#1b2a24"/>
+                            <stop offset="100%" stop-color="#0c1512"/>
+                        </linearGradient>
+                    </defs>
+
+                    <circle cx="130" cy="140" r="120" fill="url(#glow)"/>
+
+                    <!-- desk / laptop base -->
+                    <rect x="40" y="248" width="180" height="10" rx="3" fill="#0f1a16"/>
+                    <rect x="70" y="222" width="120" height="28" rx="4" fill="#122019" stroke="#00ff88" stroke-opacity="0.25"/>
+                    <rect x="78" y="228" width="104" height="16" rx="2" fill="#050a08"/>
+                    <text x="130" y="240" font-family="Courier New, monospace" font-size="9" fill="#00ff41" text-anchor="middle">$ ./exploit.sh</text>
+
+                    <!-- laptop screen glow line -->
+                    <rect x="70" y="222" width="120" height="2" fill="#00ff88" opacity="0.6"/>
+
+                    <!-- body / hoodie -->
+                    <path d="M 60 250 C 55 190 70 150 130 150 C 190 150 205 190 200 250 Z" fill="url(#hoodie)" stroke="#00ff88" stroke-opacity="0.3" stroke-width="1.5"/>
+
+                    <!-- hood -->
+                    <path d="M 95 120 C 95 85 115 60 130 60 C 145 60 165 85 165 120 C 165 150 150 165 130 165 C 110 165 95 150 95 120 Z" fill="url(#hoodie)" stroke="#00ff88" stroke-opacity="0.3" stroke-width="1.5"/>
+
+                    <!-- face shadow -->
+                    <ellipse cx="130" cy="122" rx="26" ry="30" fill="#050908"/>
+
+                    <!-- glasses / eyes glow -->
+                    <rect x="108" y="115" width="44" height="7" rx="3.5" fill="#00ff41" opacity="0.9"/>
+                    <rect x="108" y="115" width="44" height="7" rx="3.5" fill="none" stroke="#00ff88" stroke-opacity="0.6"/>
+
+                    <!-- hood strings -->
+                    <line x1="118" y1="150" x2="115" y2="175" stroke="#00ff88" stroke-opacity="0.4" stroke-width="2"/>
+                    <line x1="142" y1="150" x2="145" y2="175" stroke="#00ff88" stroke-opacity="0.4" stroke-width="2"/>
+
+                    <!-- arms typing -->
+                    <path d="M 78 250 C 85 220 100 210 118 232" fill="none" stroke="#0c1512" stroke-width="18" stroke-linecap="round"/>
+                    <path d="M 182 250 C 175 220 160 210 142 232" fill="none" stroke="#0c1512" stroke-width="18" stroke-linecap="round"/>
+
+                    <!-- floating code brackets -->
+                    <text x="30" y="70" font-family="Courier New, monospace" font-size="20" fill="#00ff41" opacity="0.5">&lt;/&gt;</text>
+                    <text x="200" y="95" font-family="Courier New, monospace" font-size="16" fill="#00ff41" opacity="0.4">01</text>
+                    <text x="20" y="180" font-family="Courier New, monospace" font-size="14" fill="#00ff41" opacity="0.35">10</text>
+                    <text x="215" y="200" font-family="Courier New, monospace" font-size="18" fill="#00ff41" opacity="0.45">#</text>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <section id="networking" class="section">
+        <h2 class="section-title"><i class="fas fa-network-wired"></i> Networking Tools</h2>
+        <p class="section-subtitle">Discover powerful tools for network scanning, monitoring, and analysis.</p>
+        
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-sitemap"></i>
+                </div>
+                <h3 class="tool-name">Nmap</h3>
+                <p class="tool-description">Network Mapper - Industry standard for network discovery and security auditing. Scan networks, discover hosts, and identify services.</p>
+                <button class="explore-btn" onclick="openModal('nmap')">Explore Nmap</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fab fa-wireshark"></i>
+                </div>
+                <h3 class="tool-name">Wireshark</h3>
+                <p class="tool-description">World's foremost network protocol analyzer. Capture and interactively browse the traffic running on a computer network.</p>
+                <button class="explore-btn" onclick="openModal('wireshark')">Explore Wireshark</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <h3 class="tool-name">Netcat</h3>
+                <p class="tool-description">The Swiss Army knife of networking tools. Read from and write to network connections using TCP or UDP.</p>
+                <button class="explore-btn" onclick="openModal('netcat')">Explore Netcat</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="web-security" class="section">
+        <h2 class="section-title"><i class="fas fa-shield-alt"></i> Web Security Tools</h2>
+        <p class="section-subtitle">Protect your web applications with comprehensive security testing tools.</p>
+        
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-bug"></i>
+                </div>
+                <h3 class="tool-name">Burp Suite</h3>
+                <p class="tool-description">Integrated platform for performing security testing of web applications with extensive capabilities.</p>
+                <button class="explore-btn" onclick="openModal('burpsuite')">Explore Burp Suite</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-shield-virus"></i>
+                </div>
+                <h3 class="tool-name">OWASP ZAP</h3>
+                <p class="tool-description">Free, open-source web application security scanner that helps you automatically find security vulnerabilities.</p>
+                <button class="explore-btn" onclick="openModal('owasp-zap')">Explore OWASP ZAP</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3 class="tool-name">SQLMap</h3>
+                <p class="tool-description">Automated SQL injection and database takeover tool that helps detect and exploit SQL injection vulnerabilities.</p>
+                <button class="explore-btn" onclick="openModal('sqlmap')">Explore SQLMap</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-server"></i>
+                </div>
+                <h3 class="tool-name">Nikto</h3>
+                <p class="tool-description">Web server scanner that performs comprehensive tests against web servers for multiple items.</p>
+                <button class="explore-btn" onclick="openModal('nikto')">Explore Nikto</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h3 class="tool-name">DirBuster</h3>
+                <p class="tool-description">Tool used to brute force directories and files names on web/application servers.</p>
+                <button class="explore-btn" onclick="openModal('dirbuster')">Explore DirBuster</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-fingerprint"></i>
+                </div>
+                <h3 class="tool-name">Wfuzz</h3>
+                <p class="tool-description">Web application fuzzer that finds resources not linked through the provided application logic.</p>
+                <button class="explore-btn" onclick="openModal('wfuzz')">Explore Wfuzz</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="password-cracking" class="section">
+        <h2 class="section-title"><i class="fas fa-key"></i> Password Cracking Tools</h2>
+        <p class="section-subtitle">Powerful tools for recovering passwords through various techniques.</p>
+        
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-user-secret"></i>
+                </div>
+                <h3 class="tool-name">John the Ripper</h3>
+                <p class="tool-description">Popular password cracker supporting many formats including Unix crypt, Windows LM hashes, and more.</p>
+                <button class="explore-btn" onclick="openModal('john-the-ripper')">Explore John the Ripper</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="tool-name">Hashcat</h3>
+                <p class="tool-description">Advanced password recovery utility that supports five unique modes of operation for over 200 highly-optimized hashing algorithms.</p>
+                <button class="explore-btn" onclick="openModal('hashcat')">Explore Hashcat</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-spider"></i>
+                </div>
+                <h3 class="tool-name">Hydra</h3>
+                <p class="tool-description">Fast network login cracker which supports numerous protocols for attacking network authentication systems.</p>
+                <button class="explore-btn" onclick="openModal('hydra')">Explore Hydra</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-skull-crossbones"></i>
+                </div>
+                <h3 class="tool-name">Cain & Abel</h3>
+                <p class="tool-description">Windows-based password recovery tool that handles encrypted passwords, analyzing routing protocols, and more.</p>
+                <button class="explore-btn" onclick="openModal('cain-and-abel')">Explore Cain & Abel</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-unlock-alt"></i>
+                </div>
+                <h3 class="tool-name">L0phtCrack</h3>
+                <p class="tool-description">Password auditing and recovery tool that analyzes Windows and Unix password hashes.</p>
+                <button class="explore-btn" onclick="openModal('l0phtcrack')">Explore L0phtCrack</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="wireless-mobile" class="section">
+        <h2 class="section-title"><i class="fas fa-wifi"></i> Wireless & Mobile Tools</h2>
+        <p class="section-subtitle">Tools for testing wireless networks and mobile applications.</p>
+        
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-wifi"></i>
+                </div>
+                <h3 class="tool-name">Aircrack-ng</h3>
+                <p class="tool-description">Suite of tools for auditing wireless networks, including packet capture and cracking capabilities.</p>
+                <button class="explore-btn" onclick="openModal('aircrack-ng')">Explore Aircrack-ng</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3 class="tool-name">Metasploit</h3>
+                <p class="tool-description">Penetration testing framework with modules specifically designed for mobile application testing and exploitation.</p>
+                <button class="explore-btn" onclick="openModal('metasploit')">Explore Metasploit</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="tool-name">WiFite</h3>
+                <p class="tool-description">Automated wireless attack tool that combines the power of several other tools into one easy-to-use interface.</p>
+                <button class="explore-btn" onclick="openModal('wifite')">Explore WiFite</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-android"></i>
+                </div>
+                <h3 class="tool-name">Android SDK</h3>
+                <p class="tool-description">Software development kit for Android that includes tools for building and testing mobile applications.</p>
+                <button class="explore-btn" onclick="openModal('android-sdk')">Explore Android SDK</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3 class="tool-name">Frida</h3>
+                <p class="tool-description">Dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers working with native apps.</p>
+                <button class="explore-btn" onclick="openModal('frida')">Explore Frida</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="forensic" class="section">
+        <h2 class="section-title"><i class="fas fa-microscope"></i> Forensic Tools</h2>
+        <p class="section-subtitle">Digital forensic tools for investigating cyber incidents and data recovery.</p>
+        
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="tool-name">Autopsy</h3>
+                <p class="tool-description">Open-source digital forensics platform built by Basis Technology that allows investigators to analyze disk images.</p>
+                <button class="explore-btn" onclick="openModal('autopsy')">Explore Autopsy</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-memory"></i>
+                </div>
+                <h3 class="tool-name">Volatility Framework</h3>
+                <p class="tool-description">Memory forensics framework for incident response and malware analysis that works with memory dumps.</p>
+                <button class="explore-btn" onclick="openModal('volatility-framework')">Explore Volatility Framework</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-hdd"></i>
+                </div>
+                <h3 class="tool-name">FTK Imager</h3>
+                <p class="tool-description">Digital evidence imaging tool that creates perfect copies of digital media without making changes to the original evidence.</p>
+                <button class="explore-btn" onclick="openModal('ftk-imager')">Explore FTK Imager</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <h3 class="tool-name">EnCase</h3>
+                <p class="tool-description">Commercial digital forensic investigation software used for collecting and examining electronic evidence.</p>
+                <button class="explore-btn" onclick="openModal('encase')">Explore EnCase</button>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-mobile-phone"></i>
+                </div>
+                <h3 class="tool-name">Cellebrite</h3>
+                <p class="tool-description">Mobile device forensics solution that extracts data from smartphones and tablets for investigative purposes.</p>
+                <button class="explore-btn" onclick="openModal('cellebrite')">Explore Cellebrite</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section">
+        <h2 class="section-title"><i class="fas fa-envelope"></i> Get In Touch</h2>
+        <p class="section-subtitle">Have questions about ethical hacking tools? Reach out to us!</p>
+        
+        <div class="contact-form">
+            <div class="form-group">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" id="name" class="form-input" placeholder="Your name">
+            </div>
+            
+            <div class="form-group">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" id="email" class="form-input" placeholder="Your email">
+            </div>
+            
+            <div class="form-group">
+                <label for="message" class="form-label">Message</label>
+                <textarea id="message" class="form-textarea" rows="5" placeholder="Your message..."></textarea>
+            </div>
+            
+            <button type="button" id="send-btn" class="submit-btn">Send Message</button>
+        </div>
+    </section>
+
+    <div class="modal-backdrop" id="modalBackdrop">
+        <div class="resource-modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle"></h3>
+                <button class="close-btn" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+    // MATRIX RAIN - improved implementation
+    // - uses devicePixelRatio for crisp rendering
+    // - uses requestAnimationFrame and visibility API to save CPU
+    // - includes a toggle button (id="matrix-toggle") to enable/disable
+    (function() {
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Configuration
+        const settings = {
+            charSet: '0123456789@#$%^&*()-=+[]{}<>?/|',
+            fontSize: 20,
+            fadeAlpha: 0.06, // background fade for trail effect
+            color: '#00ff6a',
+            opacity: 0.28
+        };
+
+        let columns = 0;
+        let drops = [];
+        let animationId = null;
+        let running = true;
+
+        // Apply configured opacity
+        canvas.style.opacity = settings.opacity;
+
+        function resize() {
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = Math.floor(window.innerWidth * dpr);
+            canvas.height = Math.floor(window.innerHeight * dpr);
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = window.innerHeight + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            columns = Math.floor(window.innerWidth / settings.fontSize);
+            drops = Array(columns).fill(1).map(() => Math.floor(Math.random() * 100));
+            ctx.font = `${settings.fontSize}px monospace`;
+        }
+
+        function step() {
+            // draw a semi-transparent rect to create the fading trail
+            ctx.fillStyle = `rgba(10,14,20,${settings.fadeAlpha})`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = settings.color;
+            for (let i = 0; i < drops.length; i++) {
+                const text = settings.charSet.charAt(Math.floor(Math.random() * settings.charSet.length));
+                const x = i * settings.fontSize;
+                const y = drops[i] * settings.fontSize;
+                ctx.fillText(text, x, y);
+
+                if (y > window.innerHeight && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+
+            animationId = running ? requestAnimationFrame(step) : null;
+        }
+
+        // Visibility handling - pause when not visible
+        function handleVisibility() {
+            if (document.hidden) {
+                running = false;
+                if (animationId) cancelAnimationFrame(animationId);
+                animationId = null;
+            } else {
+                if (!running) {
+                    running = true;
+                    animationId = requestAnimationFrame(step);
+                }
+            }
+        }
+
+        // Toggle control
+        const toggleBtn = document.getElementById('matrix-toggle');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                running = !running;
+                toggleBtn.setAttribute('aria-pressed', String(running));
+                if (running && !animationId) {
+                    animationId = requestAnimationFrame(step);
+                } else if (!running && animationId) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
+            });
+        }
+
+        // Initialize
+        window.addEventListener('resize', resize);
+        document.addEventListener('visibilitychange', handleVisibility);
+        resize();
+        // Start the animation
+        animationId = requestAnimationFrame(step);
+    })();
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Update active link
+                    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Add active class to current section when scrolling
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.section, .contact-section');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Modal Functions
+        function openModal(toolName) {
+            const modalBackdrop = document.getElementById('modalBackdrop');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalTitle.textContent = `${formatToolName(toolName)} Resources`;
+            
+            // Generate modal content based on tool name
+            switch(toolName.toLowerCase()) {
+                case 'nmap':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>Nmap (Network Mapper) is a free, open-source utility for network discovery and security auditing. It's used for host discovery, port scanning, service/version detection, and OS fingerprinting.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+sudo apt update
+sudo apt install nmap
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+brew install nmap
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Download and run the installer
+https://nmap.org/download.html#windows
+
+# Or with Chocolatey
+choco install nmap
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+nmap -sV scanme.nmap.org        # Detect service versions
+nmap -O 192.168.1.1             # OS detection
+nmap -p 22,80,443 192.168.1.1   # Scan specific ports
+nmap -sn 192.168.1.0/24         # Ping sweep (host discovery)
+nmap -A -T4 target.com          # Aggressive scan (OS, version, scripts, traceroute)
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://nmap.org/docs.html" target="_blank" class="resource-link">Official Nmap Documentation</a>
+                                <a href="https://nmap.org/book/man.html" target="_blank" class="resource-link">Nmap Reference Guide</a>
+                                <a href="https://www.stationx.net/nmap-cheat-sheet/" target="_blank" class="resource-link">Nmap Cheat Sheet (StationX)</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'wireshark':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>Wireshark is a free, open-source packet analyzer used for network troubleshooting, protocol analysis, and education. It captures and displays network traffic in real time.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+sudo apt update
+sudo apt install wireshark
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+brew install --cask wireshark
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Download the installer
+https://www.wireshark.org/download.html
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+wireshark                       # Launch the GUI
+tshark -i eth0                  # Capture on interface eth0 (CLI version)
+wireshark -k -i eth0            # Start capturing immediately on launch
+wireshark -r capture.pcap       # Open a saved capture file
+tshark -r capture.pcap -Y "http"  # Filter a saved capture for HTTP traffic
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://www.wireshark.org/docs/" target="_blank" class="resource-link">Wireshark Official Documentation</a>
+                                <a href="https://www.stationx.net/wireshark-cheat-sheet/" target="_blank" class="resource-link">Wireshark Cheat Sheet (StationX)</a>
+                                <a href="https://www.wireshark.org/docs/wsug_html_chunked/" target="_blank" class="resource-link">Wireshark User's Guide</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'netcat':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>Netcat (nc) is a versatile networking utility for reading from and writing to network connections using TCP or UDP. It's often called the "Swiss Army knife" of networking for tasks like port scanning, banner grabbing, and file transfer.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+sudo apt update
+sudo apt install netcat-traditional
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+brew install netcat
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Included with Nmap's Windows package, or download ncat separately
+https://nmap.org/ncat/
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+nc -lvp 4444                    # Listen on port 4444 (verbose)
+nc target.com 80                # Connect to a host on port 80
+nc -zv target.com 20-100        # Scan a port range
+nc -l 1234 > received.txt       # Receive a file
+nc target.com 1234 < file.txt   # Send a file
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://man7.org/linux/man-pages/man1/nc.1.html" target="_blank" class="resource-link">Netcat Manual (nc man page)</a>
+                                <a href="https://www.sans.org/posters/netcat-cheat-sheet/" target="_blank" class="resource-link">Netcat Cheat Sheet (SANS)</a>
+                                <a href="https://nmap.org/ncat/guide/" target="_blank" class="resource-link">Ncat Reference Guide (Nmap)</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'burpsuite':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>Burp Suite is an integrated platform for web application security testing. It combines an intercepting proxy, scanner, repeater, and intruder tools for manual and automated testing.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux</strong></p>
+                            <div class="code-block">
+# Download the installer (Community or Pro)
+https://portswigger.net/burp/releases
+chmod +x burpsuite_community_linux.sh
+./burpsuite_community_linux.sh
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+brew install --cask burp-suite
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Download and run the installer
+https://portswigger.net/burp/releases
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+1. Launch Burp Suite and open the embedded browser
+2. Go to Proxy > Intercept to view and modify requests live
+3. Send an interesting request to Repeater (Ctrl+R) to replay and edit it
+4. Use Target > Scope to restrict testing to your target application
+5. Use Intruder to automate payload-based testing (rate-limited in Community edition)
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://portswigger.net/burp/documentation" target="_blank" class="resource-link">Burp Suite Official Documentation</a>
+                                <a href="https://portswigger.net/web-security" target="_blank" class="resource-link">Web Security Academy (Free, by PortSwigger)</a>
+                                <a href="https://www.stationx.net/burp-suite-cheat-sheet/" target="_blank" class="resource-link">Burp Suite Cheat Sheet (StationX)</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'owasp-zap':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>OWASP ZAP (Zed Attack Proxy) is a free, open-source web application security scanner. It helps find vulnerabilities like SQL injection and XSS through automated scanning and manual testing tools.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+sudo snap install zaproxy --classic
+# or download the installer
+https://www.zaproxy.org/download/
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+brew install --cask owasp-zap
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Download and run the installer
+https://www.zaproxy.org/download/
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+zap.sh                              # Launch the GUI (Linux/macOS)
+zap.bat                             # Launch the GUI (Windows)
+zap-cli quick-scan http://target.com   # Quick automated scan (CLI, requires zap-cli)
+zap.sh -cmd -quickurl http://target.com -quickout report.html   # Headless scan with HTML report
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://www.zaproxy.org/docs/" target="_blank" class="resource-link">OWASP ZAP Official Documentation</a>
+                                <a href="https://www.zaproxy.org/getting-started/" target="_blank" class="resource-link">Getting Started Guide</a>
+                                <a href="https://www.zaproxy.org/docs/desktop/" target="_blank" class="resource-link">ZAP Desktop User Guide</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'sqlmap':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>SQLMap is an open-source penetration testing tool that automates detecting and exploiting SQL injection vulnerabilities, including database fingerprinting and data extraction.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+sudo apt update
+sudo apt install sqlmap
+# or from source
+git clone https://github.com/sqlmapproject/sqlmap.git
+cd sqlmap && python3 sqlmap.py --version
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+brew install sqlmap
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Requires Python 3
+git clone https://github.com/sqlmapproject/sqlmap.git
+cd sqlmap
+python sqlmap.py --version
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+python3 sqlmap.py -u "http://target.com/page?id=1" --batch   # Test a URL parameter
+python3 sqlmap.py -u "http://target.com/page?id=1" --dbs     # Enumerate databases
+python3 sqlmap.py -r request.txt --level=3 --risk=2           # Use a captured request file
+python3 sqlmap.py -u "http://target.com/page?id=1" -D dbname --tables   # List tables in a database
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://github.com/sqlmapproject/sqlmap/wiki" target="_blank" class="resource-link">SQLMap Official Documentation (Wiki)</a>
+                                <a href="https://github.com/sqlmapproject/sqlmap" target="_blank" class="resource-link">SQLMap GitHub Repository</a>
+                                <a href="https://github.com/sqlmapproject/sqlmap/wiki/Usage" target="_blank" class="resource-link">SQLMap Usage Guide</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'nikto':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>Nikto is an open-source web server scanner that tests for thousands of known dangerous files, outdated software versions, and other server misconfigurations.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+sudo apt update
+sudo apt install nikto
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+brew install nikto
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Requires Perl (e.g. Strawberry Perl)
+git clone https://github.com/sullo/nikto.git
+cd nikto/program
+perl nikto.pl -Version
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+nikto -h http://target.com          # Scan a target host
+nikto -h target.com -p 80,443       # Scan specific ports
+nikto -h target.com -ssl            # Force SSL scanning
+nikto -h target.com -o report.html -Format htm   # Save results to an HTML report
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://github.com/sullo/nikto" target="_blank" class="resource-link">Nikto GitHub Repository</a>
+                                <a href="https://github.com/sullo/nikto/wiki" target="_blank" class="resource-link">Nikto Documentation Wiki</a>
+                                <a href="https://hackertarget.com/nikto-tutorial/" target="_blank" class="resource-link">Nikto Cheat Sheet (HackerTarget)</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'dirbuster':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>DirBuster is a tool for brute-forcing directories and file names on web/application servers, helping discover hidden or unlinked content.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+sudo apt update
+sudo apt install dirbuster
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+# Requires Java; download the JAR release
+https://sourceforge.net/projects/dirbuster/
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Requires Java Runtime Environment
+Download from: https://sourceforge.net/projects/dirbuster/
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+dirbuster                                    # Launch the GUI
+# In the GUI: set target URL, select a wordlist (e.g. /usr/share/wordlists/dirbuster/), and start scan
+# Alternative CLI-friendly tool: gobuster dir -u http://target.com -w wordlist.txt
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://owasp.org/www-project-dirbuster/" target="_blank" class="resource-link">DirBuster Project Page (OWASP)</a>
+                                <a href="https://sourceforge.net/projects/dirbuster/" target="_blank" class="resource-link">SourceForge Download & Docs</a>
+                                <a href="https://github.com/OJ/gobuster" target="_blank" class="resource-link">Gobuster (modern alternative)</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'wfuzz':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>Wfuzz is a web application fuzzer used to brute-force parameters, discover hidden resources, and test for injection points by substituting the FUZZ keyword in requests.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+sudo apt update
+sudo apt install wfuzz
+# or via pip
+pip3 install wfuzz
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+pip3 install wfuzz
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Requires Python 3
+pip install wfuzz
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+wfuzz -c -z file,wordlist.txt http://target.com/FUZZ          # Directory/file fuzzing
+wfuzz -c -z file,users.txt -d "user=FUZZ&pass=test" http://target.com/login   # Form parameter fuzzing
+wfuzz --hc 404 -z file,wordlist.txt http://target.com/FUZZ    # Hide 404 responses
+wfuzz -u http://target.com/FUZZ.php -z list,php-bak-old       # Fuzz a specific file extension list
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://github.com/xmendez/wfuzz" target="_blank" class="resource-link">Wfuzz GitHub Repository</a>
+                                <a href="https://wfuzz.readthedocs.io/" target="_blank" class="resource-link">Wfuzz Documentation</a>
+                                <a href="https://wfuzz.readthedocs.io/en/latest/user/basicusage.html" target="_blank" class="resource-link">Wfuzz Usage Guide</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'john-the-ripper':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>John the Ripper is a popular password-cracking tool supporting many hash formats, including Unix crypt, Windows LM/NTLM hashes, and more, using dictionary and brute-force attacks.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+sudo apt update
+sudo apt install john
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+brew install john
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Download the binary release
+https://www.openwall.com/john/
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+john hashes.txt                                # Crack hashes with default wordlist
+john --wordlist=rockyou.txt hashes.txt         # Dictionary attack with a custom wordlist
+john --show hashes.txt                         # Show cracked passwords
+unshadow /etc/passwd /etc/shadow > combined.txt && john combined.txt   # Crack Linux shadow passwords
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://www.openwall.com/john/" target="_blank" class="resource-link">John the Ripper Official Site</a>
+                                <a href="https://www.openwall.com/john/doc/" target="_blank" class="resource-link">John the Ripper Documentation</a>
+                                <a href="https://github.com/openwall/john" target="_blank" class="resource-link">John the Ripper GitHub</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'hashcat':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>Hashcat is an advanced password recovery tool supporting numerous attack modes and over 300 highly-optimized hashing algorithms, with GPU acceleration for speed.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+sudo apt update
+sudo apt install hashcat
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+brew install hashcat
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Download the binary release
+https://hashcat.net/hashcat/
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+hashcat -m 0 -a 0 hashes.txt rockyou.txt        # Dictionary attack on MD5 hashes
+hashcat -m 1000 -a 3 hashes.txt ?a?a?a?a?a?a    # Brute-force NTLM hashes (mask attack)
+hashcat -m 0 hashes.txt rockyou.txt --show      # Show cracked results
+hashcat -b                                      # Benchmark your hardware
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://hashcat.net/wiki/" target="_blank" class="resource-link">Hashcat Official Documentation (Wiki)</a>
+                                <a href="https://hashcat.net/wiki/doku.php?id=example_hashes" target="_blank" class="resource-link">Hashcat Example Hashes</a>
+                                <a href="https://www.stationx.net/hashcat-cheat-sheet/" target="_blank" class="resource-link">Hashcat Cheat Sheet (StationX)</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'hydra':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>Hydra (THC-Hydra) is a fast network login cracker that supports numerous protocols (SSH, FTP, HTTP forms, RDP, and more) for testing authentication strength.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+sudo apt update
+sudo apt install hydra
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+brew install hydra
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Use via WSL, or download a Windows build
+https://github.com/vanhauser-thc/thc-hydra
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+hydra -l admin -P rockyou.txt ssh://target.com          # Brute-force SSH login
+hydra -L users.txt -P passwords.txt ftp://target.com    # Brute-force FTP with user/pass lists
+hydra -l admin -P rockyou.txt target.com http-post-form "/login:user=^USER^&pass=^PASS^:F=incorrect"   # Web login form
+hydra -t 4 -l admin -P rockyou.txt rdp://target.com     # Brute-force RDP with 4 threads
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://github.com/vanhauser-thc/thc-hydra" target="_blank" class="resource-link">THC-Hydra GitHub Repository</a>
+                                <a href="https://www.stationx.net/hydra-cheat-sheet/" target="_blank" class="resource-link">Hydra Cheat Sheet (StationX)</a>
+                                <a href="https://github.com/vanhauser-thc/thc-hydra/blob/master/README" target="_blank" class="resource-link">Hydra Usage Examples</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'cain-and-abel':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>Cain & Abel is a Windows-based password recovery tool that handles encrypted passwords, network protocol analysis, and cryptanalysis attacks. It's legacy software, no longer actively maintained.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Legacy tool, download archive from a trusted mirror
+https://sectools.org/tool/cain/
+# Note: many modern antivirus tools flag it; use in an isolated lab VM
+                            </div>
+                            <p style="margin-top:14px;"><strong>Linux</strong></p>
+                            <div class="code-block">
+Not natively supported — run via a Windows VM
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+Not natively supported — run via a Windows VM
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+1. Launch Cain & Abel as Administrator
+2. Use the 'Sniffer' tab to capture network traffic (requires WinPcap/Npcap)
+3. Use the 'Cracker' tab to load captured hashes and run dictionary/brute-force attacks
+4. Use built-in tools for ARP poisoning and route analysis in a controlled lab environment only
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://sectools.org/tool/cain/" target="_blank" class="resource-link">Cain & Abel Overview (SecTools)</a>
+                                <a href="https://owasp.org/www-community/attacks/Brute_force_attack" target="_blank" class="resource-link">Password Cracking Concepts (OWASP)</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'l0phtcrack':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>L0phtCrack is a password auditing and recovery tool that analyzes Windows and Unix password hashes to test password strength and policy compliance.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Download from the current maintainer
+https://l0phtcrack.gitlab.io/
+                            </div>
+                            <p style="margin-top:14px;"><strong>Linux</strong></p>
+                            <div class="code-block">
+Not natively supported — Windows-focused tool
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+Not natively supported — Windows-focused tool
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+1. Launch L0phtCrack and choose 'New Session Wizard'
+2. Select a password hash import source (local machine, remote machine, or file)
+3. Choose an audit method: dictionary, hybrid, precomputation, or brute force
+4. Review the report to see which accounts have weak passwords
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://l0phtcrack.gitlab.io/" target="_blank" class="resource-link">L0phtCrack Project Site</a>
+                                <a href="https://owasp.org/www-community/attacks/Brute_force_attack" target="_blank" class="resource-link">Password Auditing Basics (OWASP)</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'aircrack-ng':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>Aircrack-ng is a complete suite of tools for auditing wireless (Wi-Fi) network security, covering packet capture, WEP/WPA-PSK key cracking, and traffic injection.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+sudo apt update
+sudo apt install aircrack-ng
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+brew install aircrack-ng
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Requires a compatible wireless adapter and driver
+Download from: https://www.aircrack-ng.org/downloads.html
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+airmon-ng start wlan0                          # Enable monitor mode
+airodump-ng wlan0mon                           # Capture nearby networks
+airodump-ng -w capture -c 6 --bssid AA:BB:CC:DD:EE:FF wlan0mon   # Capture handshake for a target AP
+aircrack-ng -w rockyou.txt -b AA:BB:CC:DD:EE:FF capture-01.cap   # Crack the captured handshake
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://www.aircrack-ng.org/documentation.html" target="_blank" class="resource-link">Aircrack-ng Official Documentation</a>
+                                <a href="https://www.aircrack-ng.org/doku.php?id=getting_started" target="_blank" class="resource-link">Aircrack-ng Getting Started</a>
+                                <a href="https://www.stationx.net/aircrack-ng-cheat-sheet/" target="_blank" class="resource-link">Wi-Fi Security Cheat Sheet (StationX)</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'metasploit':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>Metasploit Framework is a widely-used penetration testing platform with modules for exploit development, payload generation, and post-exploitation, including mobile application testing.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall
+chmod 755 msfinstall
+./msfinstall
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+brew install metasploit
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Download the installer
+https://windows.metasploit.com/metasploitframework-latest.msi
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+msfconsole                                  # Launch the interactive console
+search type:exploit platform:android        # Search for Android exploit modules
+use exploit/multi/handler                   # Select a module
+set PAYLOAD android/meterpreter/reverse_tcp # Configure a payload
+run                                         # Execute the module
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://docs.metasploit.com/" target="_blank" class="resource-link">Metasploit Official Documentation</a>
+                                <a href="https://www.offsec.com/metasploit-unleashed/" target="_blank" class="resource-link">Metasploit Unleashed (Free Course)</a>
+                                <a href="https://github.com/rapid7/metasploit-framework" target="_blank" class="resource-link">Metasploit GitHub Repository</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'wifite':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>WiFite is an automated wireless attack tool that wraps aircrack-ng, reaver, and other utilities into a single, easy-to-use interface for auditing Wi-Fi networks.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+sudo apt update
+sudo apt install wifite
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+# Best run via Kali Linux VM; not natively packaged for macOS
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Best run via Kali Linux WSL/VM; not natively packaged for Windows
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+sudo wifite                          # Launch and auto-detect wireless interface
+sudo wifite --kill                   # Kill processes that could interfere before starting
+sudo wifite -i wlan0 --wpa           # Target WPA/WPA2 networks specifically
+sudo wifite --dict rockyou.txt       # Use a custom wordlist for cracking captured handshakes
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://github.com/derv82/wifite2" target="_blank" class="resource-link">WiFite2 GitHub Repository</a>
+                                <a href="https://github.com/derv82/wifite2#usage" target="_blank" class="resource-link">WiFite Usage Guide</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'android-sdk':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>The Android SDK (Software Development Kit) provides tools for building, debugging, and testing Android applications, including the emulator, ADB, and build tools used in mobile security testing.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux</strong></p>
+                            <div class="code-block">
+# Install Android Studio (includes SDK manager)
+Download: https://developer.android.com/studio
+# Or install command-line tools only
+sdkmanager "platform-tools" "platforms;android-34"
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+brew install --cask android-studio
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Download and run the installer
+https://developer.android.com/studio
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+adb devices                          # List connected devices/emulators
+adb install app.apk                  # Install an APK to a device
+adb shell                            # Open a shell on the device
+adb logcat                           # View real-time device logs
+emulator -avd Pixel_5_API_34         # Launch an emulator instance
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://developer.android.com/tools" target="_blank" class="resource-link">Android SDK Official Documentation</a>
+                                <a href="https://developer.android.com/tools/adb" target="_blank" class="resource-link">ADB Command Reference</a>
+                                <a href="https://developer.android.com/studio/intro" target="_blank" class="resource-link">Android Studio User Guide</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'frida':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>Frida is a dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers, allowing you to inject scripts into native apps on Android, iOS, Windows, macOS, and Linux.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+pip3 install frida-tools
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+pip3 install frida-tools
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+pip install frida-tools
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+frida-ps -U                                  # List processes on a connected USB device
+frida -U -f com.example.app -l script.js --no-pause   # Spawn an app and inject a script
+frida-trace -U -i "open" com.example.app     # Trace calls to a specific function
+frida -U com.example.app                     # Attach to a running app for a REPL session
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://frida.re/docs/home/" target="_blank" class="resource-link">Frida Official Documentation</a>
+                                <a href="https://github.com/frida/frida" target="_blank" class="resource-link">Frida GitHub Repository</a>
+                                <a href="https://codeshare.frida.re/" target="_blank" class="resource-link">Frida CodeShare (Community Scripts)</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'autopsy':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>Autopsy is an open-source digital forensics platform built on The Sleuth Kit, used to analyze disk images, recover deleted files, and investigate evidence in a graphical interface.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+sudo apt update
+sudo apt install autopsy
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+# Run via a Linux VM; not natively packaged for macOS
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Download and run the installer
+https://www.autopsy.com/download/
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+1. Launch Autopsy and select 'New Case'
+2. Add a data source (disk image, local drive, or logical files)
+3. Choose which ingest modules to run (hash lookup, keyword search, file type ID, etc.)
+4. Browse results in the tree view: deleted files, timeline, and extracted artifacts
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://www.autopsy.com/support/" target="_blank" class="resource-link">Autopsy Official Documentation</a>
+                                <a href="https://sleuthkit.org/autopsy/docs/user-docs/4.19.3/" target="_blank" class="resource-link">Autopsy User Guide</a>
+                                <a href="https://www.sleuthkit.org/" target="_blank" class="resource-link">The Sleuth Kit Project</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'volatility-framework':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>The Volatility Framework is an open-source memory forensics tool used for incident response and malware analysis, extracting artifacts from RAM memory dumps.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Linux (Debian/Ubuntu)</strong></p>
+                            <div class="code-block">
+pip3 install volatility3
+# or clone from source
+git clone https://github.com/volatilityfoundation/volatility3.git
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+pip3 install volatility3
+                            </div>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+pip install volatility3
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+python3 vol.py -f memdump.raw windows.info               # Identify OS/profile info
+python3 vol.py -f memdump.raw windows.pslist             # List running processes
+python3 vol.py -f memdump.raw windows.netscan            # List network connections
+python3 vol.py -f memdump.raw windows.malfind            # Detect injected/malicious code
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://volatility3.readthedocs.io/" target="_blank" class="resource-link">Volatility 3 Documentation</a>
+                                <a href="https://github.com/volatilityfoundation/volatility3" target="_blank" class="resource-link">Volatility Foundation GitHub</a>
+                                <a href="https://www.stationx.net/volatility-cheat-sheet/" target="_blank" class="resource-link">Volatility Cheat Sheet (StationX)</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'ftk-imager':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>FTK Imager is a free digital evidence imaging tool that creates forensically sound copies of digital media (disks, memory) without altering the original evidence.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Download and run the installer (free registration required)
+https://www.exterro.com/ftk-imager
+                            </div>
+                            <p style="margin-top:14px;"><strong>Linux</strong></p>
+                            <div class="code-block">
+Not natively supported — Windows-focused tool (run via VM)
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+Not natively supported — Windows-focused tool (run via VM)
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+1. Launch FTK Imager and select File > Create Disk Image
+2. Choose the source (physical drive, logical drive, or image file)
+3. Select an image format (E01, DD/raw, AFF) and destination
+4. Verify the image hash (MD5/SHA1) after creation to confirm forensic integrity
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://www.exterro.com/ftk-imager" target="_blank" class="resource-link">FTK Imager Product Page</a>
+                                <a href="https://www.exterro.com/ftk-product-downloads" target="_blank" class="resource-link">FTK Imager User Guide</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'encase':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>EnCase is a commercial digital forensic investigation platform used by law enforcement and enterprises for collecting, analyzing, and reporting on electronic evidence.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Commercial license required
+https://www.opentext.com/products/encase-forensic
+                            </div>
+                            <p style="margin-top:14px;"><strong>Linux</strong></p>
+                            <div class="code-block">
+Not supported — Windows-only commercial software
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+Not supported — Windows-only commercial software
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+1. Launch EnCase and create a new case with case details/examiner info
+2. Add evidence files (disk images or live acquisitions)
+3. Use the Evidence Processor to run hashing, signature analysis, and keyword search
+4. Bookmark relevant artifacts and generate a formal report for court/enterprise use
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://www.opentext.com/products/encase-forensic" target="_blank" class="resource-link">EnCase Product Page (OpenText)</a>
+                                <a href="https://www.opentext.com/products/encase-forensic-training" target="_blank" class="resource-link">OpenText Forensic Training</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'cellebrite':
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>Cellebrite is a commercial mobile device forensics platform used to extract, decode, and analyze data from smartphones and tablets for investigative purposes.</p>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-download"></i> Installation</h4>
+                            <p style="margin-top:14px;"><strong>Windows</strong></p>
+                            <div class="code-block">
+# Commercial license and hardware unit required
+https://cellebrite.com/en/support/
+                            </div>
+                            <p style="margin-top:14px;"><strong>Linux</strong></p>
+                            <div class="code-block">
+Not supported — proprietary hardware/software combination
+                            </div>
+                            <p style="margin-top:14px;"><strong>macOS</strong></p>
+                            <div class="code-block">
+Not supported — proprietary hardware/software combination
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-terminal"></i> Basic Usage Examples</h4>
+                            <div class="code-block">
+1. Connect the target device via the Cellebrite hardware unit (UFED)
+2. Select an extraction type: logical, file system, or physical (device-dependent)
+3. Run the extraction and let Cellebrite decode the device's file system
+4. Review and analyze extracted data in Cellebrite Physical Analyzer / Reader
+                            </div>
+                        </div>
+
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-book"></i> Learning Resources</h4>
+                            <div class="resource-links">
+                                <a href="https://cellebrite.com/en/home/" target="_blank" class="resource-link">Cellebrite Official Site</a>
+                                <a href="https://cellebrite.com/en/training/" target="_blank" class="resource-link">Cellebrite Learning Center</a>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                default:
+                    modalBody.innerHTML = `
+                        <div class="content-section">
+                            <h4 class="section-title"><i class="fas fa-info-circle"></i> Overview</h4>
+                            <p>This is a placeholder for ${formatToolName(toolName)} resources. Please check back later for detailed documentation.</p>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            // Show the modal
+            modalBackdrop.style.display = 'flex';
+        }
+        
+        function closeModal() {
+            const modalBackdrop = document.getElementById('modalBackdrop');
+            modalBackdrop.style.display = 'none';
+        }
+        
+        function formatToolName(name) {
+            return name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        }
+        
+
+        // Contact form: open user's mail client with a prefilled email
+        (function() {
+            const btn = document.getElementById('send-btn');
+            if (!btn) return;
+
+            btn.addEventListener('click', function () {
+                const to = 'hackershub2025@gmail.com';
+                const name = (document.getElementById('name') || { value: '' }).value.trim();
+                const from = (document.getElementById('email') || { value: '' }).value.trim();
+                const message = (document.getElementById('message') || { value: '' }).value.trim();
+
+                if (!message) {
+                    alert('Please enter a message before sending.');
+                    return;
+                }
+
+                const subject = `Message from Security Toolkit Hub${name ? ' - ' + name : ''}`;
+                let body = '';
+                if (name) body += `Name: ${name}\r\n`;
+                if (from) body += `From: ${from}\r\n\r\n`;
+                body += `Message:\r\n${message}`;
+
+                // Try to open Gmail compose in a new tab with prefilled fields
+                const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                const newWindow = window.open(gmailUrl, '_blank');
+                if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                    // Popup blocked or failed — fallback to mailto
+                    const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                    window.location.href = mailto;
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
