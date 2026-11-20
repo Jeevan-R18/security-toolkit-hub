@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jeevan-r18.github.io/security-toolkit-hub/sitemap.xml
